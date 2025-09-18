@@ -64,10 +64,13 @@
         class="hidden mt-8 mx-auto bg-white rounded-[20px] flex flex-col gap-6 max-w-1/3"
       >
         <div
-          class="flex bg-red-500 w-full h-full justify-center items-center rounded-t-[20px] relative"
+          class="flex w-full h-full justify-center items-center rounded-t-[20px] relative"
           id="pokemon-img-container"
         >
-          <span id="pokemon-img-container-gradient" class="w-[100%] h-[40%] bg-red-500 absolute bottom-0 rounded-t-full"></span>
+          <span
+            id="pokemon-img-container-gradient"
+            class="w-[100%] h-[40%] absolute bottom-0 rounded-t-full"
+          ></span>
           <img
             id="pokemon-img"
             src=""
@@ -85,104 +88,111 @@
 
     <script>
       const typeColors = {
-        normal: "bg-gray-400/60",
-        fire: "bg-red-500/60",
-        water: "bg-blue-500/60",
-        electric: "bg-yellow-400/60",
-        grass: "bg-green-500/60",
-        ice: "bg-cyan-300/60",
-        fighting: "bg-orange-700/60",
-        poison: "bg-purple-500/60",
-        ground: "bg-yellow-700/60",
-        flying: "bg-indigo-300/60",
-        psychic: "bg-pink-500/60",
-        bug: "bg-lime-500/60",
-        rock: "bg-stone-500/60",
-        ghost: "bg-violet-700/60",
-        dragon: "bg-indigo-700/60",
-        dark: "bg-gray-800/60",
-        steel: "bg-slate-400/60",
-        fairy: "bg-pink-300/60",
-        stellar: "bg-sky-400/60",
+        normal: "bg-gray-400",
+        fire: "bg-red-500",
+        water: "bg-blue-500",
+        electric: "bg-yellow-400",
+        grass: "bg-green-500",
+        ice: "bg-cyan-300",
+        fighting: "bg-orange-700",
+        poison: "bg-purple-500",
+        ground: "bg-yellow-700",
+        flying: "bg-indigo-300",
+        psychic: "bg-pink-500",
+        bug: "bg-lime-500",
+        rock: "bg-stone-500",
+        ghost: "bg-violet-700",
+        dragon: "bg-indigo-700",
+        dark: "bg-gray-800",
+        steel: "bg-slate-400",
+        fairy: "bg-pink-300",
+        stellar: "bg-sky-400",
       };
 
-      for (const [key, value] of Object.entries(typeColors)) {
-        console.log(key, value);
-      }
-    
       const pokemonCard = document.getElementById("pokemon-card");
-      const pokemonImgContainer = document.getElementById("pokemon-img-container");
-      const pokemonImgContainerGradient = document.getElementById("pokemon-img-container-gradient");
-    
+      const pokemonImgContainer = document.getElementById(
+        "pokemon-img-container"
+      );
+      const pokemonImgContainerGradient = document.getElementById(
+        "pokemon-img-container-gradient"
+      );
+
       const pokemonError = document.getElementById("pokemon-error");
-      const pokemonErrorMessage = document.getElementById("pokemon-error-message");
-    
-      function clearTypeColors(el) {
-        Object.values(typeColors).forEach(cls => {
-          cls.split(" ").forEach(token => el.classList.remove(token));
-        });
-        el.style.background = ""; // reset inline gradients too
-      }
-    
+      const pokemonErrorMessage = document.getElementById(
+        "pokemon-error-message"
+      );
+
       function searchPokemon(event) {
         event.preventDefault();
         const pokemonName = document
           .querySelector("input")
           .value.toLowerCase()
           .trim();
-    
+
         fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
           .then((response) => response.json())
           .then((data) => {
             const { name, weight, sprites, id, types } = data;
+            console.log(types[0].type.name);
 
-        // Update image
-        const img = document.getElementById("pokemon-img");
-        img.src = sprites.front_default;
-        img.alt = name;
+            // Update image
+            const img = document.getElementById("pokemon-img");
+            img.src = sprites.front_default;
+            img.alt = name;
 
-        // Update text
-        document.getElementById("pokemon-id").textContent = `#${id}`;
-        document.getElementById("pokemon-name").textContent = name;
-        // document.getElementById("pokemon-weight").textContent =
-        //   weight + " lbs";
+            // Update text
+            document.getElementById("pokemon-id").textContent = `#${id}`;
+            document.getElementById("pokemon-name").textContent = name;
+            // document.getElementById("pokemon-weight").textContent =
+            //   weight + " lbs";
 
-        const pokemonTypes = types.map((t) => t.type.name);
+            const pokemonTypes = types.map((t) => t.type.name);
 
-        // Show types
-        // document.getElementById(
-        //   "pokemon-gen"
-        // ).textContent = `Types: ${pokemonTypes.join(", ")}`;
-        const typeElement = document.getElementById("pokemon-type");
-        typeElement.innerHTML = "";
-        pokemonTypes.forEach((typeName) => {
-          const typeBadge = document.createElement("span");
-          typeBadge.className = `inline-block rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2 ${typeColors[typeName] || "bg-gray-200"}`;
-          typeBadge.textContent =
-            typeName.charAt(0).toUpperCase() + typeName.slice(1);
-          typeElement.appendChild(typeBadge);
-        });
+            // Show types
+            const typeElement = document.getElementById("pokemon-type");
+            typeElement.innerHTML = "";
+            pokemonTypes.forEach((typeName) => {
+              const typeBadge = document.createElement("span");
+              typeBadge.className = `inline-block rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2 ${typeColors[typeName] || "bg-gray-200"}`;
+              typeBadge.textContent =
+                typeName.charAt(0).toUpperCase() + typeName.slice(1);
+              typeElement.appendChild(typeBadge);
+            });
 
-        // Apply background to span instead of container
-        clearTypeColors(pokemonImgContainerGradient);
+            // for (const [key, value] of Object.entries(typeColors)) {
+            //   if (types[0].type.name === key) {
+            //     pokemonImgContainer.classList.add(value+'/60');
+            //     console.log(value);
+            //   }
+            // }
+            // First, clear any existing color classes
+            Object.values(typeColors).forEach(colorClass => {
+              pokemonImgContainer.classList.remove(colorClass);
+            });
+            pokemonImgContainer.classList.remove('bg-gray-200');
 
-        if (pokemonTypes.length === 1) {
-          pokemonImgContainerGradient.classList.add(
-            typeColors[pokemonTypes[0]] || "bg-gray-200"
-          );
-        } else {
-          // Use gradient for dual types
-          const color1 =
-            typeColors[pokemonTypes[0]]?.replace("bg-", "rgba(") || "rgba(128,128,128,0.4)";
-          const color2 =
-            typeColors[pokemonTypes[1]]?.replace("bg-", "rgba(") || "rgba(200,200,200,0.4)";
-          pokemonImgContainerGradient.className =
-            "w-[100%] h-[40%] absolute bottom-0 rounded-t-full";
-          pokemonImgContainerGradient.style.background = `linear-gradient(135deg, ${color1}, ${color2})`;
-        }
+            // Then add only the matching color
+            const pokemonType = types[0].type.name;
+            pokemonImgContainer.classList.add(typeColors[pokemonType] || 'bg-gray-200');
 
-        pokemonCard.classList.remove("hidden");
-        pokemonError.classList.add("hidden");
+            // First, clear any existing color classes
+            // Object.values(typeColors).forEach(colorClass => {
+            //   pokemonImgContainerGradient.classList.remove(colorClass);
+            // });
+            // pokemonImgContainerGradient.classList.remove('bg-gray-200');
+
+            // // Then add only the matching color
+            // const pokemonTypeGradient = types[0].type.name;
+            // pokemonImgContainerGradient.classList.add(typeColors[pokemonTypeGradient] || 'bg-gray-200');
+
+            for (const [key, value] of Object.entries(typeColors)) {
+              if (types[0].type.name === key) {
+                pokemonImgContainerGradient.classList.add(value+'/30');
+                console.log(value);
+              }
+            }
+            pokemonCard.classList.remove("hidden");
+            pokemonError.classList.add("hidden");
           })
           .catch((error) => {
             pokemonCard.classList.add("hidden");
@@ -194,6 +204,5 @@
           });
       }
     </script>
-    
   </body>
 </html>
