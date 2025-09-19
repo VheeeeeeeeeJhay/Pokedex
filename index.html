@@ -61,25 +61,30 @@
       <!-- Pokemon card, render after search -->
       <div
         id="pokemon-card"
-        class="hidden mt-8 mx-auto bg-white rounded-[20px] flex flex-col gap-6 max-w-1/3"
+        class="hidden mt-8 mx-auto bg-white rounded-[20px] flex flex-col max-w-1/3"
       >
         <div
-          class="flex w-full h-full justify-center items-center rounded-t-[20px] relative"
+          class="flex h-full w-full justify-center items-center rounded-t-[20px] relative p-4"
           id="pokemon-img-container"
         >
           <span
-            id="pokemon-img-container-gradient"
-            class="w-[100%] h-[40%] absolute bottom-0 rounded-t-full"
+            class="w-[100%] h-[40%] absolute bottom-0 rounded-t-full bg-gray-200/25"
           ></span>
+          <p
+            id="pokemon-id-bg"
+            class="absolute top-0 right-0 font-bold text-white opacity-35 text-[65px] px-4"
+          ></p>
+
           <img
             id="pokemon-img"
             src=""
             alt=""
-            class="w-40 h-40 object-contain sm:w-1/2 z-10"
+            class="w-40 h-40 aspect-ratio-1 z-10 mt-10 object-contain items-center justify-self-center"
           />
         </div>
-        <div class="text-left space-y-2 z-10 bg-white p-4 rounded-b-[20px]">
-          <p id="pokemon-id" class="text-lg sm:text-xl font-bold"></p>
+        <div
+          class="text-left space-y-2 z-10 bg-white p-4 rounded-b-[20px] relative flex justify-center items-center"
+        >
           <p id="pokemon-name" class="text-lg sm:text-xl"></p>
           <p id="pokemon-type" class="text-lg sm:text-xl"></p>
         </div>
@@ -113,9 +118,6 @@
       const pokemonImgContainer = document.getElementById(
         "pokemon-img-container"
       );
-      const pokemonImgContainerGradient = document.getElementById(
-        "pokemon-img-container-gradient"
-      );
 
       const pokemonError = document.getElementById("pokemon-error");
       const pokemonErrorMessage = document.getElementById(
@@ -141,8 +143,11 @@
             img.alt = name;
 
             // Update text
-            document.getElementById("pokemon-id").textContent = `#${id}`;
-            document.getElementById("pokemon-name").textContent = name;
+            // document.getElementById("pokemon-id").textContent = `#${id}`;
+            document.getElementById("pokemon-id-bg").textContent = `#${id}`;
+            document.getElementById("pokemon-name").textContent =
+              name[0].toUpperCase() + name.slice(1);
+            console.log(document.getElementById("pokemon-name").textContent);
             // document.getElementById("pokemon-weight").textContent =
             //   weight + " lbs";
 
@@ -153,7 +158,9 @@
             typeElement.innerHTML = "";
             pokemonTypes.forEach((typeName) => {
               const typeBadge = document.createElement("span");
-              typeBadge.className = `inline-block rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2 ${typeColors[typeName] || "bg-gray-200"}`;
+              typeBadge.className = `inline-block rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2 ${
+                typeColors[typeName] || "bg-gray-200"
+              }`;
               typeBadge.textContent =
                 typeName.charAt(0).toUpperCase() + typeName.slice(1);
               typeElement.appendChild(typeBadge);
@@ -166,31 +173,17 @@
             //   }
             // }
             // First, clear any existing color classes
-            Object.values(typeColors).forEach(colorClass => {
+            Object.values(typeColors).forEach((colorClass) => {
               pokemonImgContainer.classList.remove(colorClass);
             });
-            pokemonImgContainer.classList.remove('bg-gray-200');
+            pokemonImgContainer.classList.remove("bg-gray-200");
 
             // Then add only the matching color
             const pokemonType = types[0].type.name;
-            pokemonImgContainer.classList.add(typeColors[pokemonType] || 'bg-gray-200');
+            pokemonImgContainer.classList.add(
+              typeColors[pokemonType] || "bg-gray-200"
+            );
 
-            // First, clear any existing color classes
-            // Object.values(typeColors).forEach(colorClass => {
-            //   pokemonImgContainerGradient.classList.remove(colorClass);
-            // });
-            // pokemonImgContainerGradient.classList.remove('bg-gray-200');
-
-            // // Then add only the matching color
-            // const pokemonTypeGradient = types[0].type.name;
-            // pokemonImgContainerGradient.classList.add(typeColors[pokemonTypeGradient] || 'bg-gray-200');
-
-            for (const [key, value] of Object.entries(typeColors)) {
-              if (types[0].type.name === key) {
-                pokemonImgContainerGradient.classList.add(value+'/30');
-                console.log(value);
-              }
-            }
             pokemonCard.classList.remove("hidden");
             pokemonError.classList.add("hidden");
           })
