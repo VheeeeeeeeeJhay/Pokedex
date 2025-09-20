@@ -68,8 +68,8 @@
       </div>
       <div
         id="pokemon-card"
-        class="hidden mt-8 mx-auto bg-white rounded-[20px] flex flex-col max-w-1/3 hover:scale-105 transition duration-300 ease-in-out"
-        onClick="toggleModal()"
+        class="hidden mt-8 mx-auto bg-white rounded-[20px] flex flex-col max-w-1/3 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+        onclick="toggleModal()"
       >
       <div role="status">
         <div
@@ -98,11 +98,15 @@
         </div>
       </div>
 
-      <!-- Modal -->
-      <div
-        id="modal"
-        class="hidden absolute top-0 left-0 w-full h-full z-50 bg-black/50 flex justify-center items-center"
-      >
+      </div>
+    </div>
+    
+    <!-- Modal - Moved outside of the card -->
+    <div
+      id="modal"
+      class="hidden fixed inset-0 z-50 bg-black/50 flex justify-center items-center"
+      onclick="toggleModal()"
+    >
         <div
           class="h-[50%] w-[50%] bg-white rounded-[20px] relative overflow-hidden"
         >
@@ -135,7 +139,7 @@
             </div>
           </div>
 
-          <div class="h-[90%] flex z-10">
+          <div class="h-[90%] flex z-10" onclick="event.stopPropagation()">
             <div class="h-full w-full px-4 line-height-none m-0 relative">
               <p
                 id="pokemodal-id"
@@ -232,7 +236,7 @@
         </div>
       </div>
     </div>
-
+    
     <script>
       const typeColors = {
         normal: "bg-gray-400",
@@ -398,16 +402,12 @@
           modal.classList.remove("hidden");
         }
 
-        console.log("Modal opened");
         modalStatus = !modalStatus;
-        console.log(modalStatus);
       }
       window.onclick = (event) => {
-        // if you click directly on the overlay (not inside the modal body)
         if (event.target === modal) {
           modal.classList.add("hidden");
           modalStatus = false;
-          console.log("Modal closed, status: " + modalStatus);
         }
       };
     </script>
